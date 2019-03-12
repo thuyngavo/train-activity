@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Train Schedule</title>
+    <!--Link Reset CSS-->
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    <!--Link Bootsrap Source-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--Link CSS Page-->
+    <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+    <!--Link Javascript Page-->
+    <script src="assets/javascript/app.js"></script>
+    <!--Link jQuery-->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js'></script>
+    <!--Link Firebase-->
+    <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
+    <!--Link moment.js-->
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+</head>
+<body> 
+    <!--header-->
+    <div class=container>
+        <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                <h1 class="display-4">Anytime is Train Time</h1>
+                <p class="lead">Choo Choo. Chee Chee.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--table to hold results-->
+    <div class=container>
+    <div class="card mb-4">
+        <div class="card-header">Current Train Schedule</div>
+            <div class="card-body">
+                <table class="table table-sm table-hover" id="train-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Train Name</th>
+                            <th scope="col">Destination</th>
+                            <th scope="col">Frequency (min)</th>
+                            <th scope="col">Next Arrival</th>
+                            <th scope="col">Minutes Away</th>
+                        </tr>
+                    </thead>
+                    <tbody class="train-display"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    
+  
+
+    <!--form to submit user info-->
+    <div class=container>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">Add Train</div>
+                    <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="employee-name-input">Train Name</label>
+                            <input class="form-control" id="train-name-input" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="role-input">Destination</label>
+                            <input class="form-control" id="destination-input" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="start-input">First Train Time (HH:mm - military time)</label>
+                            <input class="form-control" id="time-input"type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="rate-input">Frequency (min)</label>
+                            <input class="form-control" id="frequency-input" type="text">
+                        </div>
+                        <button class="btn btn-primary float-right" id="add-train-btn">Submit</button>
+                    </form>   
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyD52euAbTiQI8jf82qrCHTKo8lsL-yJgRA",
+    authDomain: "groupproject1-1552151782848.firebaseapp.com",
+    databaseURL: "https://groupproject1-1552151782848.firebaseio.com",
+    projectId: "groupproject1-1552151782848",
+    storageBucket: "groupproject1-1552151782848.appspot.com",
+    messagingSenderId: "614899259391"
+};
+
+firebase.initializeApp(config);
+
+var database = firebase.database();
+
+// onclick function
+$("#add-train-btn").on("click", function(event) {
+  event.preventDefault();
+
+  // collects input from users
+  var trainName = $("#train-name-input").val().trim();
+  var trainDestination = $("#destination-input").val().trim();
+  var firstTrain = moment($("#time-input").val().trim(), "HH:mm").format("X");
+  var trainFrequency = $("#frequency-input").val().trim();
+
+  // holding employee data
+  var newTrain = {
+    name: trainName,
+    destination: trainDestination,
+    time: firstTrain,
+    frequency: trainFrequency
+  };
+
+  // upload data to the database
+  database.ref().push(newTrain);
+
+  // console.log responses
+  console.log(newTrain.name);
+  console.log(newTrain.destination);
+  console.log(newTrain.time);
+  console.log(newTrain.frequency);
+
+  alert("Train Route Successfully Added");
+
+  // clear text input
+  $("#employee-name-input").val("");
+  $("#destination-input").val("");
+  $("#time-input").val("");
+  $("#frequency-input").val("");
+});
+
+// firebase event for adding to database 
+database.ref().on("child_added", function(childSnapshot) {
+  console.log(childSnapshot.val());
+
+  // variable to store snapshot
+  var trainName = childSnapshot.val().name;
+  var trainDestination = childSnapshot.val().destination;
+  var firstTrain = childSnapshot.val().time;
+  var trainFrequency = childSnapshot.val().frequency;
+
+  // console.log train information
+  console.log(trainName);
+  console.log(trainDestination);
+  console.log(firstTrain);
+  console.log(trainFrequency);
+
+  // convert first train time to make sure it comes before cuurent time (set back by one year)
+  var tFirstTrain = moment(firstTime, "HH:mm").subtract(1, "years");
+  console.log(tFirstTrain);
+
+  // calculate current Time
+  var currentTime = moment();
+  console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+  // time diferrences
+  var timeDifference = moment().diff(moment(tFirstTrain), "minutes");
+  console.log("DIFFERENCE IN TIME: " + timeDifference);
+
+  // time between current and next train (remainder)
+  var tRemainder = timeDifference % tFrequency;
+
+  // calculate how long until next train
+  var minutesLeft = tFrequency - tRemainder;
+  console.log(tMinutesTillTrain + " until the next train");
+
+  // calculate when next train arrives
+  var nextArrival = moment().add(tMinutesTillTrain, "minutes");
+  console.log("The Train will arrive at " + moment(nextTrain).format("hh:mm"));
+
+  // print new row
+  var addRow = $("<tr>").html(
+    $("<td>").text(trainName),
+    $("<td>").text(trainDestination),
+    $("<td>").text(trainFrequency),    
+    $("<td>").text(nextArrival),
+    $("<td>").text(minutesLeft)
+  );
+
+  // append each row to table
+  $(".train-display").append(addRow);
+});
+
+</script>
+
+
+</html>
