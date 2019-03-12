@@ -168,26 +168,26 @@ database.ref().on("child_added", function(childSnapshot) {
   console.log(trainFrequency);
 
   // convert first train time to make sure it comes before cuurent time (set back by one year)
-  var tFirstTrain = moment(firstTime, "HH:mm").subtract(1, "years");
+  var tFirstTrain = moment(firstTrain, "HH:mm").subtract(1, "years");
   console.log(tFirstTrain);
 
   // calculate current Time
   var currentTime = moment();
-  console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+  console.log("Current time: " + moment(currentTime).format("hh:mm"));
 
-  // time diferrences
+  // time differance
   var timeDifference = moment().diff(moment(tFirstTrain), "minutes");
-  console.log("DIFFERENCE IN TIME: " + timeDifference);
+  console.log("Time difference: " + timeDifference);
 
   // time between current and next train (remainder)
-  var tRemainder = timeDifference % tFrequency;
+  var remainder = timeDifference % trainFrequency;
 
   // calculate how long until next train
-  var minutesLeft = tFrequency - tRemainder;
-  console.log(tMinutesTillTrain + " until the next train");
+  var minutesLeft = trainFrequency - remainder;
+  console.log(minutesLeft + " until the next train");
 
   // calculate when next train arrives
-  var nextArrival = moment().add(tMinutesTillTrain, "minutes");
+  var nextArrival = moment().add(minutesLeft, "minutes");
   console.log("The Train will arrive at " + moment(nextTrain).format("hh:mm"));
 
   // print new row
@@ -200,7 +200,7 @@ database.ref().on("child_added", function(childSnapshot) {
   );
 
   // append each row to table
-  $("#train-table").append(addRow);
+  $("#train-table > tbody").append(addRow);
 
 });
 
