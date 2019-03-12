@@ -1,31 +1,11 @@
+body{
+    Background: grey;
+
+}
+
 .jumbotron{
     background:brown !important;
     color: white;
     text-align: center;
     padding-top: 10px;
-}
-
-#form{
-    border-style: solid;
-    border-color: #2C2A62;
-    margin: 20px;
-    margin-top:0px;
-    padding: 10px;
-}
-
-.form-title {
-    background:#2C2A62;
-    color: white;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 0px;
-    padding: 10px;
-}
-
-#resultsContainer{
-    border-style: solid;
-    border-color: #2C2A62;
-    margin: 20px;
-    margin-top:0px;
-    padding: 10px;
 }
