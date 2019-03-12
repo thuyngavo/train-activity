@@ -187,7 +187,7 @@ database.ref().on("child_added", function(childSnapshot) {
   console.log(minutesLeft + " until the next train");
 
   // calculate when next train arrives
-  var nextArrival = moment().add(minutesLeft, "minutes");
+  var nextTrain = moment().add(minutesLeft, "minutes");
   console.log("The Train will arrive at " + moment(nextTrain).format("hh:mm"));
 
   // print new row
@@ -195,7 +195,7 @@ database.ref().on("child_added", function(childSnapshot) {
     $("<th>").text(trainName),
     $("<td>").text(trainDestination),
     $("<td>").text(trainFrequency),    
-    $("<td>").text(nextArrival),
+    $("<td>").text(nextTrain),
     $("<td>").text(minutesLeft)
   );
 
