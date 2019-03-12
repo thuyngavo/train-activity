@@ -96,4 +96,7 @@ var addRow = $("<tr>").append(
   $("<td>").text(minutesLeft)
 );
 
+// append each row to table
+$("#train-table > tbody").append(addRow);
+
 });
